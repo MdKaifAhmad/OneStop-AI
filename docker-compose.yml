@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # MongoDB Service
+  mongodb:
+    image: mongo:7.0
+    container_name: onestop-mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - onestop-network
+
+  # Python FastAPI AI Microservice (LangChain + LangGraph + RAG)
+  ai-service:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: onestop-ai-service
+    restart: always
+    ports:
+      - '8000:8000'
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GROQ_MODEL=${GROQ_MODEL:-llama-3.3-70b-versatile}
+    networks:
+      - onestop-network
+
+  # Node Express Backend Gateway
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: onestop-backend
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/onestopdb
+      - PORT=5000
+      - JWT_SECRET=${JWT_SECRET:-replace-this-with-a-long-random-secret-value-at-least-32-characters}
+      - JWT_EXPIRES_IN=7d
+      - AI_SERVICE_URL=http://ai-service:8000
+    depends_on:
+      - mongodb
+      - ai-service
+    networks:
+      - onestop-network
+
+  # React Frontend (Vite / Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: onestop-frontend
+    restart: always
+    ports:
+      - '3000:80'
+    depends_on:
+      - backend
+    networks:
+      - onestop-network
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  onestop-network:
+    driver: bridge
