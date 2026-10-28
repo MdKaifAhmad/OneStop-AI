@@ -16,7 +16,6 @@
 ## 📌 Table of Contents
 - [Overview](#-overview)
 - [System Architecture](#-system-architecture)
-- [Why Re-Architect from Spring Boot to MERN + FastAPI?](#-why-re-architect-from-spring-boot-to-mern--fastapi)
 - [Core Features](#-core-features)
   - [1. AI Placement Preparation Engine (LangGraph)](#1-ai-placement-preparation-engine-langgraph)
   - [2. Smart Scholarship Discovery Finder (28 Strict Rules)](#2-smart-scholarship-discovery-finder-strict-rules)
@@ -99,20 +98,6 @@ flowchart TD
     ScholarshipAI --> Groq
     RAGEngine --> Groq
 ```
-
----
-
-## ⚡ Why Re-Architect from Spring Boot to MERN + FastAPI?
-
-| Feature | Legacy Architecture (Spring Boot) | Modern Architecture (OneStop 2.0) |
-|---|---|---|
-| **Architecture** | Monolithic Java 21 Spring Boot app | Decoupled Polyglot Microservices (Node + Python) |
-| **AI Workflows** | Hardcoded monolithic prompt string | **LangGraph Multi-Node StateGraph** pipeline |
-| **Cutoff Forecasting** | Database SQL range query only | **RAG (Retrieval-Augmented Generation)** + Strategic Advice |
-| **Database** | MySQL relational tables with rigid schema | **MongoDB** with flexible document models & Native TTL |
-| **Frontend** | Vanilla JavaScript & single HTML file | **Modern React 18 SPA** (Vite, Tailwind, Componentized) |
-| **Containerization** | Standalone JAR | **Docker & Docker Compose** multi-container setup |
-| **Concurrency** | Thread-per-request blocking execution | Asynchronous Non-blocking Event Loop + Python ASGI |
 
 ---
 
